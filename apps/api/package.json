@@ -5,12 +5,15 @@
   "scripts": {
     "start:dev": "dotenv -e ../../.env -- ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/main.ts",
     "build": "tsc -p tsconfig.build.json",
+    "build:seed": "tsc -p tsconfig.seed.json",
     "start:prod": "node dist/main.js",
     "prisma:generate": "prisma generate",
     "db:migrate": "dotenv -e ../../.env -- prisma migrate dev",
     "db:migrate:deploy": "dotenv -e ../../.env -- prisma migrate deploy",
     "db:seed": "dotenv -e ../../.env -- ts-node -r tsconfig-paths/register prisma/seed.ts",
-    "db:wipe-demo": "dotenv -e ../../.env -- ts-node -r tsconfig-paths/register prisma/wipe-demo.ts"
+    "db:wipe-demo": "dotenv -e ../../.env -- ts-node -r tsconfig-paths/register prisma/wipe-demo.ts",
+    "db:seed:prod": "node dist-seed/seed.js",
+    "db:wipe-demo:prod": "node dist-seed/wipe-demo.js"
   },
   "dependencies": {
     "@blksm/shared": "*",

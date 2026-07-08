@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist-seed",
+    "rootDir": "./prisma",
+    "baseUrl": ".",
+    "paths": {}
+  },
+  "include": ["prisma/seed.ts", "prisma/wipe-demo.ts"]
+}

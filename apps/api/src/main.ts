@@ -23,7 +23,13 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.setGlobalPrefix("api");
 
-  const port = process.env.API_PORT ? Number(process.env.API_PORT) : 4000;
+  // Railway (and most PaaS hosts) assign a dynamic port via PORT; prefer that,
+  // falling back to API_PORT/4000 for local dev where nothing sets PORT.
+  const port = process.env.PORT
+    ? Number(process.env.PORT)
+    : process.env.API_PORT
+      ? Number(process.env.API_PORT)
+      : 4000;
   await app.listen(port);
   // eslint-disable-next-line no-console
   console.log(`BLKSM Academy API listening on port ${port}`);
