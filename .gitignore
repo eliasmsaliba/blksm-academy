@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+.next/
+*.tsbuildinfo
+.env
+.env.local
+apps/api/storage/uploads/
+.pgdata/
+apps/api/generated/
+npm-debug.log*
+.DS_Store

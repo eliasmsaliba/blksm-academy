@@ -1,0 +1,9 @@
+[build]
+  command = "npm install && npm run build --workspace=@blksm/shared && npm run build --workspace=@blksm/web"
+  publish = "apps/web/.next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

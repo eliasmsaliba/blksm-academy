@@ -1,0 +1,174 @@
+export enum UserStatus {
+  ACTIVE = "ACTIVE",
+  INVITED = "INVITED",
+  SUSPENDED = "SUSPENDED",
+}
+
+export enum AuthProvider {
+  LOCAL = "LOCAL",
+  GOOGLE = "GOOGLE",
+  MICROSOFT = "MICROSOFT",
+  SAML = "SAML",
+}
+
+export enum ScopeType {
+  GLOBAL = "GLOBAL",
+  ACADEMY = "ACADEMY",
+  DEPARTMENT = "DEPARTMENT",
+}
+
+export enum ContentStatus {
+  DRAFT = "DRAFT",
+  PUBLISHED = "PUBLISHED",
+  ARCHIVED = "ARCHIVED",
+}
+
+export enum LessonType {
+  RICH_TEXT = "RICH_TEXT",
+  VIDEO = "VIDEO",
+  AUDIO = "AUDIO",
+  PDF = "PDF",
+  PPTX = "PPTX",
+  IMAGE = "IMAGE",
+  EMBED = "EMBED",
+  LINK = "LINK",
+  INTERACTIVE = "INTERACTIVE",
+}
+
+export enum AttachableType {
+  LESSON = "LESSON",
+  LEARNING_RESOURCE = "LEARNING_RESOURCE",
+  SOP = "SOP",
+  KB_ARTICLE = "KB_ARTICLE",
+  ASSIGNMENT_SUBMISSION = "ASSIGNMENT_SUBMISSION",
+  CERTIFICATE = "CERTIFICATE",
+  QUESTION = "QUESTION",
+  USER_AVATAR = "USER_AVATAR",
+}
+
+export enum TaggableType {
+  COURSE = "COURSE",
+  LEARNING_RESOURCE = "LEARNING_RESOURCE",
+  SOP_DOCUMENT = "SOP_DOCUMENT",
+  KB_ARTICLE = "KB_ARTICLE",
+  LESSON = "LESSON",
+  QUESTION = "QUESTION",
+}
+
+export enum ResourceType {
+  POLICY = "POLICY",
+  TEMPLATE = "TEMPLATE",
+  CHECKLIST = "CHECKLIST",
+  FORM = "FORM",
+  WORKSHEET = "WORKSHEET",
+  GUIDE = "GUIDE",
+  BRAND_DOC = "BRAND_DOC",
+  OTHER = "OTHER",
+}
+
+export enum SopStatus {
+  DRAFT = "DRAFT",
+  UNDER_REVIEW = "UNDER_REVIEW",
+  ACTIVE = "ACTIVE",
+  SUPERSEDED = "SUPERSEDED",
+  RETIRED = "RETIRED",
+}
+
+export enum ArticleType {
+  ARTICLE = "ARTICLE",
+  DOC = "DOC",
+  FAQ = "FAQ",
+}
+
+export enum QuestionType {
+  MCQ_SINGLE = "MCQ_SINGLE",
+  MCQ_MULTI = "MCQ_MULTI",
+  TRUE_FALSE = "TRUE_FALSE",
+  MATCHING = "MATCHING",
+  ORDERING = "ORDERING",
+  SHORT_ANSWER = "SHORT_ANSWER",
+  ESSAY = "ESSAY",
+  FILE_UPLOAD = "FILE_UPLOAD",
+  PRACTICAL = "PRACTICAL",
+}
+
+export enum QuestionDifficulty {
+  EASY = "EASY",
+  MEDIUM = "MEDIUM",
+  HARD = "HARD",
+}
+
+export enum AssessmentKind {
+  ASSESSMENT = "ASSESSMENT",
+  EXAM = "EXAM",
+}
+
+export enum GradingStatus {
+  PENDING = "PENDING",
+  AUTO_GRADED = "AUTO_GRADED",
+  MANUALLY_GRADED = "MANUALLY_GRADED",
+  PARTIALLY_GRADED = "PARTIALLY_GRADED",
+}
+
+export enum SubmissionStatus {
+  SUBMITTED = "SUBMITTED",
+  GRADED = "GRADED",
+  RETURNED = "RETURNED",
+}
+
+export enum CompetencySourceType {
+  COURSE = "COURSE",
+  ASSESSMENT = "ASSESSMENT",
+}
+
+export enum UserCompetencyStatus {
+  IN_PROGRESS = "IN_PROGRESS",
+  ACHIEVED = "ACHIEVED",
+  EXPIRED = "EXPIRED",
+}
+
+export enum CertificateStatus {
+  ACTIVE = "ACTIVE",
+  EXPIRED = "EXPIRED",
+  REVOKED = "REVOKED",
+}
+
+export enum LearningPathStepType {
+  COURSE = "COURSE",
+  ASSESSMENT = "ASSESSMENT",
+  ASSIGNMENT = "ASSIGNMENT",
+}
+
+export enum PrerequisiteTargetType {
+  COURSE = "COURSE",
+  LEARNING_PATH_STEP = "LEARNING_PATH_STEP",
+  CERTIFICATION = "CERTIFICATION",
+}
+
+export enum PrerequisiteType {
+  COURSE = "COURSE",
+  ASSESSMENT = "ASSESSMENT",
+  COMPETENCY = "COMPETENCY",
+  CERTIFICATION = "CERTIFICATION",
+}
+
+export enum EnrollableType {
+  COURSE = "COURSE",
+  LEARNING_PATH = "LEARNING_PATH",
+}
+
+export enum ProgressStatus {
+  NOT_STARTED = "NOT_STARTED",
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+}
+
+export enum NotificationType {
+  NEW_ASSIGNMENT = "NEW_ASSIGNMENT",
+  DUE_DATE_REMINDER = "DUE_DATE_REMINDER",
+  ASSESSMENT_FAILED = "ASSESSMENT_FAILED",
+  CERT_EXPIRY = "CERT_EXPIRY",
+  NEW_SOP = "NEW_SOP",
+  ANNOUNCEMENT = "ANNOUNCEMENT",
+  GENERIC = "GENERIC",
+}
