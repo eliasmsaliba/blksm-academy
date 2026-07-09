@@ -7,3 +7,13 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# Proxy API calls through Netlify's own domain so the auth cookie is set as
+# first-party (for netlify.app) instead of third-party (for railway.app).
+# Browsers increasingly block third-party cookies outright, which silently
+# breaks cross-domain cookie auth no matter how CORS/SameSite are configured.
+[[redirects]]
+  from = "/api/*"
+  to = "https://blksm-academy-production.up.railway.app/api/:splat"
+  status = 200
+  force = true

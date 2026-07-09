@@ -126,13 +126,19 @@ dev-oriented `Dockerfile` used by `docker-compose.yml`) and `netlify.toml`.
    `DATABASE_URL` is auto-injected by the Postgres plugin. Attach a Volume mounted at `/data` so
    uploaded files survive redeploys. Run `npm run db:seed --workspace=apps/api` once via Railway's
    shell/one-off command.
-3. **Netlify**: import the same repo (`netlify.toml` configures the build automatically). Set
-   `NEXT_PUBLIC_API_URL` to your Railway service's public URL + `/api`.
+3. **Netlify**: import the same repo. `netlify.toml` includes a redirect that proxies `/api/*`
+   through to Railway (edit the `to =` URL in `netlify.toml` to match your actual Railway domain).
+   Set `NEXT_PUBLIC_API_URL=/api` (a relative path, **not** the Railway URL — see below for why).
 4. Go back to Railway and set `CORS_ORIGIN` to your Netlify URL, redeploy.
 
-Cross-origin note: Netlify and Railway are different domains, so auth cookies need
-`SameSite=None; Secure` (not `Lax`) — this is handled automatically in
-`apps/api/src/modules/auth/auth.controller.ts` based on `NODE_ENV` and whether `COOKIE_DOMAIN` is set.
+**Why the frontend calls `/api` through a Netlify proxy instead of Railway directly:** Netlify and
+Railway are different domains, and modern browsers increasingly block third-party cookies outright
+— no CORS/SameSite configuration fixes that, login just silently fails to persist a session. Routing
+`/api/*` through Netlify's own domain (via the `[[redirects]]` rule in `netlify.toml`) makes the
+request same-origin from the browser's point of view, so the auth cookie is set as first-party for
+the Netlify domain instead. `apps/api/src/modules/auth/auth.controller.ts` still sets
+`SameSite=None; Secure` in production as a fallback/defense-in-depth, but the proxy is what actually
+makes cross-domain auth reliable.
 
 ## Notes for whoever picks this up next
 
