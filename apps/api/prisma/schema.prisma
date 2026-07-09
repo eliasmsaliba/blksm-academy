@@ -31,76 +31,76 @@ enum ScopeType {
 }
 
 model User {
-  id            String   @id @default(uuid())
-  email         String   @unique
-  firstName     String
-  lastName      String
-  status        UserStatus @default(ACTIVE)
-  lastLoginAt   DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id          String     @id @default(uuid())
+  email       String     @unique
+  firstName   String
+  lastName    String
+  status      UserStatus @default(ACTIVE)
+  lastLoginAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
-  authIdentities   AuthIdentity[]
-  refreshTokens    RefreshToken[]
-  userRoles        UserRole[]
-  employeeProfile  EmployeeProfile?
-  managedDepartments Department[]  @relation("DepartmentManager")
+  authIdentities     AuthIdentity[]
+  refreshTokens      RefreshToken[]
+  userRoles          UserRole[]
+  employeeProfile    EmployeeProfile?
+  managedDepartments Department[]      @relation("DepartmentManager")
   managedEmployees   EmployeeProfile[] @relation("EmployeeManager")
 
-  createdAcademies    Academy[]      @relation("AcademyCreatedBy")
-  createdCourses      Course[]       @relation("CourseCreatedBy")
-  uploadedAttachments Attachment[]   @relation("AttachmentUploadedBy")
-  ownedResources      LearningResource[] @relation("ResourceOwner")
-  ownedSops           SopDocument[]  @relation("SopOwner")
-  authoredArticles    KnowledgeArticle[] @relation("ArticleAuthor")
-  createdQuestions    Question[]     @relation("QuestionCreatedBy")
-  createdAssessments   Assessment[]  @relation("AssessmentCreatedBy")
-  createdAssignments   Assignment[]  @relation("AssignmentCreatedBy")
-  assignmentSubmissions AssignmentSubmission[] @relation("SubmissionUser")
-  gradedSubmissions    AssignmentSubmission[] @relation("SubmissionGradedBy")
-  assignmentComments   AssignmentComment[]
-  assessmentAttempts   AssessmentAttempt[]
-  gradedAnswers        AssessmentAnswer[] @relation("AnswerGradedBy")
-  userCompetencies     UserCompetency[]
-  issuedCertificates   IssuedCertificate[]
-  createdLearningPaths LearningPath[]
-  enrollments          Enrollment[]       @relation("EnrollmentUser")
-  enrolledBy           Enrollment[]       @relation("EnrollmentEnrolledBy")
-  lessonProgress       LessonProgress[]
-  courseProgress       CourseProgress[]
-  notifications        Notification[]
-  notificationPrefs    NotificationPreference[]
+  createdAcademies      Academy[]                @relation("AcademyCreatedBy")
+  createdCourses        Course[]                 @relation("CourseCreatedBy")
+  uploadedAttachments   Attachment[]             @relation("AttachmentUploadedBy")
+  ownedResources        LearningResource[]       @relation("ResourceOwner")
+  ownedSops             SopDocument[]            @relation("SopOwner")
+  authoredArticles      KnowledgeArticle[]       @relation("ArticleAuthor")
+  createdQuestions      Question[]               @relation("QuestionCreatedBy")
+  createdAssessments    Assessment[]             @relation("AssessmentCreatedBy")
+  createdAssignments    Assignment[]             @relation("AssignmentCreatedBy")
+  assignmentSubmissions AssignmentSubmission[]   @relation("SubmissionUser")
+  gradedSubmissions     AssignmentSubmission[]   @relation("SubmissionGradedBy")
+  assignmentComments    AssignmentComment[]
+  assessmentAttempts    AssessmentAttempt[]
+  gradedAnswers         AssessmentAnswer[]       @relation("AnswerGradedBy")
+  userCompetencies      UserCompetency[]
+  issuedCertificates    IssuedCertificate[]
+  createdLearningPaths  LearningPath[]
+  enrollments           Enrollment[]             @relation("EnrollmentUser")
+  enrolledBy            Enrollment[]             @relation("EnrollmentEnrolledBy")
+  lessonProgress        LessonProgress[]
+  courseProgress        CourseProgress[]
+  notifications         Notification[]
+  notificationPrefs     NotificationPreference[]
   auditLogs             AuditLog[]
 
   @@index([status])
 }
 
 model AuthIdentity {
-  id             String   @id @default(uuid())
+  id             String           @id @default(uuid())
   userId         String
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   provider       AuthProviderType @default(LOCAL)
   providerUserId String?
   passwordHash   String?
   metadata       Json?
   lastUsedAt     DateTime?
-  createdAt      DateTime @default(now())
+  createdAt      DateTime         @default(now())
 
   @@unique([provider, providerUserId])
   @@unique([provider, userId])
 }
 
 model RefreshToken {
-  id               String   @id @default(uuid())
-  userId           String
-  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tokenHash        String   @unique
+  id                String    @id @default(uuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash         String    @unique
   replacedByTokenId String?
-  userAgent        String?
-  ipAddress        String?
-  expiresAt        DateTime
-  revokedAt        DateTime?
-  createdAt        DateTime @default(now())
+  userAgent         String?
+  ipAddress         String?
+  expiresAt         DateTime
+  revokedAt         DateTime?
+  createdAt         DateTime  @default(now())
 
   @@index([userId])
 }
@@ -117,8 +117,8 @@ model Role {
 }
 
 model Permission {
-  id          String @id @default(uuid())
-  key         String @unique
+  id          String  @id @default(uuid())
+  key         String  @unique
   resource    String
   action      String
   description String?
@@ -156,49 +156,49 @@ model UserRole {
 // =========================================================================
 
 model Department {
-  id                 String   @id @default(uuid())
+  id                 String       @id @default(uuid())
   name               String
-  code               String   @unique
+  code               String       @unique
   parentDepartmentId String?
-  parentDepartment   Department? @relation("DepartmentHierarchy", fields: [parentDepartmentId], references: [id])
+  parentDepartment   Department?  @relation("DepartmentHierarchy", fields: [parentDepartmentId], references: [id])
   childDepartments   Department[] @relation("DepartmentHierarchy")
   managerId          String?
-  manager            User?    @relation("DepartmentManager", fields: [managerId], references: [id])
-  isDemoData         Boolean  @default(false)
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  manager            User?        @relation("DepartmentManager", fields: [managerId], references: [id])
+  isDemoData         Boolean      @default(false)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
 
-  positions        Position[]
-  employeeProfiles EmployeeProfile[]
+  positions         Position[]
+  employeeProfiles  EmployeeProfile[]
   learningResources LearningResource[]
-  sopDocuments     SopDocument[]
+  sopDocuments      SopDocument[]
 }
 
 model Position {
-  id           String   @id @default(uuid())
+  id           String      @id @default(uuid())
   title        String
   departmentId String?
   department   Department? @relation(fields: [departmentId], references: [id])
-  createdAt    DateTime @default(now())
+  createdAt    DateTime    @default(now())
 
   employeeProfiles EmployeeProfile[]
 }
 
 model EmployeeProfile {
-  id             String   @id @default(uuid())
-  userId         String   @unique
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String      @id @default(uuid())
+  userId         String      @unique
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   departmentId   String?
   department     Department? @relation(fields: [departmentId], references: [id])
   positionId     String?
-  position       Position? @relation(fields: [positionId], references: [id])
+  position       Position?   @relation(fields: [positionId], references: [id])
   managerId      String?
-  manager        User?    @relation("EmployeeManager", fields: [managerId], references: [id])
-  employeeNumber String?  @unique
+  manager        User?       @relation("EmployeeManager", fields: [managerId], references: [id])
+  employeeNumber String?     @unique
   hireDate       DateTime?
   metadata       Json?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 }
 
 // =========================================================================
@@ -224,39 +224,39 @@ enum LessonType {
 }
 
 model Academy {
-  id          String   @id @default(uuid())
+  id          String        @id @default(uuid())
   name        String
-  slug        String   @unique
+  slug        String        @unique
   description String?
   status      ContentStatus @default(DRAFT)
   createdById String?
-  createdBy   User?    @relation("AcademyCreatedBy", fields: [createdById], references: [id])
-  isDemoData  Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdBy   User?         @relation("AcademyCreatedBy", fields: [createdById], references: [id])
+  isDemoData  Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
-  courses Course[]
+  courses        Course[]
   certifications Certification[]
 }
 
 model Course {
-  id                String   @id @default(uuid())
-  academyId         String
-  academy           Academy  @relation(fields: [academyId], references: [id], onDelete: Cascade)
-  title             String
-  slug              String
-  description       String?
-  learningObjectives String?
+  id                       String        @id @default(uuid())
+  academyId                String
+  academy                  Academy       @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  title                    String
+  slug                     String
+  description              String?
+  learningObjectives       String?
   estimatedDurationMinutes Int?
-  difficultyLevel   String?
-  competenciesGained String?
-  status            ContentStatus @default(DRAFT)
-  order             Int      @default(0)
-  createdById       String?
-  createdBy         User?    @relation("CourseCreatedBy", fields: [createdById], references: [id])
-  isDemoData        Boolean  @default(false)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  difficultyLevel          String?
+  competenciesGained       String?
+  status                   ContentStatus @default(DRAFT)
+  order                    Int           @default(0)
+  createdById              String?
+  createdBy                User?         @relation("CourseCreatedBy", fields: [createdById], references: [id])
+  isDemoData               Boolean       @default(false)
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @updatedAt
 
   modules            CourseModule[]
   resourceLinks      ResourceCourseLink[]
@@ -270,40 +270,42 @@ model Course {
 }
 
 model CourseModule {
-  id          String   @id @default(uuid())
-  courseId    String
-  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  title       String
-  description String?
-  learningOutcomes String?
-  deliveryMethod String?
-  resourcesRequired String[] @default([])
+  id                       String        @id @default(uuid())
+  courseId                 String
+  course                   Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title                    String
+  description              String?
+  learningOutcomes         String?
+  deliveryMethod           String?
+  resourcesRequired        String[]      @default([])
   estimatedDurationMinutes Int?
-  status      ContentStatus @default(DRAFT)
-  order       Int      @default(0)
-  isLocked    Boolean  @default(false)
-  isDemoData  Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  status                   ContentStatus @default(DRAFT)
+  order                    Int           @default(0)
+  isLocked                 Boolean       @default(false)
+  isDemoData               Boolean       @default(false)
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @updatedAt
 
-  lessons Lesson[]
+  lessons     Lesson[]
+  assessments Assessment[]
+  assignments Assignment[]
 
   @@index([courseId])
 }
 
 model Lesson {
-  id           String   @id @default(uuid())
-  courseModuleId String
-  courseModule CourseModule @relation(fields: [courseModuleId], references: [id], onDelete: Cascade)
-  title        String
-  lessonType   LessonType @default(RICH_TEXT)
-  content      Json
+  id                       String        @id @default(uuid())
+  courseModuleId           String
+  courseModule             CourseModule  @relation(fields: [courseModuleId], references: [id], onDelete: Cascade)
+  title                    String
+  lessonType               LessonType    @default(RICH_TEXT)
+  content                  Json
   estimatedDurationMinutes Int?
-  status       ContentStatus @default(DRAFT)
-  order        Int      @default(0)
-  isDemoData   Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  status                   ContentStatus @default(DRAFT)
+  order                    Int           @default(0)
+  isDemoData               Boolean       @default(false)
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @updatedAt
 
   lessonProgress LessonProgress[]
   assessments    Assessment[]
@@ -327,21 +329,21 @@ enum AttachableType {
 }
 
 model Attachment {
-  id                String   @id @default(uuid())
+  id                String         @id @default(uuid())
   attachableType    AttachableType
   attachableId      String
   fileName          String
   mimeType          String
   sizeBytes         Int
   storageKey        String
-  version           Int      @default(1)
+  version           Int            @default(1)
   previousVersionId String?
-  previousVersion   Attachment? @relation("AttachmentVersion", fields: [previousVersionId], references: [id])
-  nextVersions      Attachment[] @relation("AttachmentVersion")
+  previousVersion   Attachment?    @relation("AttachmentVersion", fields: [previousVersionId], references: [id])
+  nextVersions      Attachment[]   @relation("AttachmentVersion")
   checksum          String?
   uploadedById      String?
-  uploadedBy        User?    @relation("AttachmentUploadedBy", fields: [uploadedById], references: [id])
-  createdAt         DateTime @default(now())
+  uploadedBy        User?          @relation("AttachmentUploadedBy", fields: [uploadedById], references: [id])
+  createdAt         DateTime       @default(now())
 
   @@index([attachableType, attachableId])
 }
@@ -364,12 +366,12 @@ enum TaggableType {
 }
 
 model TagAssignment {
-  id           String   @id @default(uuid())
+  id           String       @id @default(uuid())
   tagId        String
-  tag          Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tag          Tag          @relation(fields: [tagId], references: [id], onDelete: Cascade)
   taggableType TaggableType
   taggableId   String
-  createdAt    DateTime @default(now())
+  createdAt    DateTime     @default(now())
 
   @@unique([tagId, taggableType, taggableId])
   @@index([taggableType, taggableId])
@@ -391,18 +393,18 @@ enum ResourceType {
 }
 
 model LearningResource {
-  id           String   @id @default(uuid())
+  id           String        @id @default(uuid())
   title        String
   description  String?
-  resourceType ResourceType @default(OTHER)
+  resourceType ResourceType  @default(OTHER)
   departmentId String?
-  department   Department? @relation(fields: [departmentId], references: [id])
+  department   Department?   @relation(fields: [departmentId], references: [id])
   ownerId      String?
-  owner        User?    @relation("ResourceOwner", fields: [ownerId], references: [id])
+  owner        User?         @relation("ResourceOwner", fields: [ownerId], references: [id])
   status       ContentStatus @default(DRAFT)
-  isDemoData   Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  isDemoData   Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   courseLinks ResourceCourseLink[]
 }
@@ -411,7 +413,7 @@ model ResourceCourseLink {
   resourceId String
   resource   LearningResource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
   courseId   String
-  course     Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course     Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@id([resourceId, courseId])
 }
@@ -429,34 +431,34 @@ enum SopStatus {
 }
 
 model SopDocument {
-  id            String   @id @default(uuid())
-  sopNumber     String   @unique
+  id            String      @id @default(uuid())
+  sopNumber     String      @unique
   title         String
   departmentId  String?
   department    Department? @relation(fields: [departmentId], references: [id])
   ownerId       String?
-  owner         User?    @relation("SopOwner", fields: [ownerId], references: [id])
-  version       Int      @default(1)
+  owner         User?       @relation("SopOwner", fields: [ownerId], references: [id])
+  version       Int         @default(1)
   effectiveDate DateTime?
   reviewDate    DateTime?
-  status        SopStatus @default(DRAFT)
-  isDemoData    Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  status        SopStatus   @default(DRAFT)
+  isDemoData    Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 
   revisions   SopRevision[]
   courseLinks SopCourseLink[]
 }
 
 model SopRevision {
-  id            String   @id @default(uuid())
+  id            String      @id @default(uuid())
   sopDocumentId String
   sopDocument   SopDocument @relation(fields: [sopDocumentId], references: [id], onDelete: Cascade)
   version       Int
   changeSummary String?
   attachmentId  String?
   createdById   String?
-  createdAt     DateTime @default(now())
+  createdAt     DateTime    @default(now())
 
   @@index([sopDocumentId])
 }
@@ -465,7 +467,7 @@ model SopCourseLink {
   sopDocumentId String
   sopDocument   SopDocument @relation(fields: [sopDocumentId], references: [id], onDelete: Cascade)
   courseId      String
-  course        Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course        Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@id([sopDocumentId, courseId])
 }
@@ -481,18 +483,18 @@ enum ArticleType {
 }
 
 model KnowledgeArticle {
-  id           String   @id @default(uuid())
-  title        String
-  slug         String   @unique
-  bodyContent  Json
-  articleType  ArticleType @default(ARTICLE)
-  status       ContentStatus @default(DRAFT)
-  authorId     String?
-  author       User?    @relation("ArticleAuthor", fields: [authorId], references: [id])
-  viewCount    Int      @default(0)
-  isDemoData   Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          String        @id @default(uuid())
+  title       String
+  slug        String        @unique
+  bodyContent Json
+  articleType ArticleType   @default(ARTICLE)
+  status      ContentStatus @default(DRAFT)
+  authorId    String?
+  author      User?         @relation("ArticleAuthor", fields: [authorId], references: [id])
+  viewCount   Int           @default(0)
+  isDemoData  Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }
 
 // =========================================================================
@@ -518,29 +520,30 @@ enum QuestionDifficulty {
 }
 
 model Question {
-  id           String   @id @default(uuid())
-  questionType QuestionType
-  promptText   Json
-  points       Int      @default(1)
-  difficulty   QuestionDifficulty?
-  createdById  String?
-  createdBy    User?    @relation("QuestionCreatedBy", fields: [createdById], references: [id])
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id              String              @id @default(uuid())
+  questionType    QuestionType
+  promptText      Json
+  points          Int                 @default(1)
+  difficulty      QuestionDifficulty?
+  gradingGuidance String?
+  createdById     String?
+  createdBy       User?               @relation("QuestionCreatedBy", fields: [createdById], references: [id])
+  isActive        Boolean             @default(true)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
 
-  options            QuestionOption[]
+  options             QuestionOption[]
   assessmentQuestions AssessmentQuestion[]
-  answers            AssessmentAnswer[]
+  answers             AssessmentAnswer[]
 }
 
 model QuestionOption {
-  id         String  @id @default(uuid())
+  id         String   @id @default(uuid())
   questionId String
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   optionText String
-  isCorrect  Boolean @default(false)
-  order      Int     @default(0)
+  isCorrect  Boolean  @default(false)
+  order      Int      @default(0)
   matchGroup String?
 
   @@index([questionId])
@@ -552,25 +555,27 @@ enum AssessmentKind {
 }
 
 model Assessment {
-  id                 String   @id @default(uuid())
+  id                 String         @id @default(uuid())
   title              String
   description        String?
   assessmentKind     AssessmentKind @default(ASSESSMENT)
   courseId           String?
-  course             Course?  @relation(fields: [courseId], references: [id])
+  course             Course?        @relation(fields: [courseId], references: [id])
   lessonId           String?
-  lesson             Lesson?  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  passMarkPercent    Float    @default(70)
+  lesson             Lesson?        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  courseModuleId     String?
+  courseModule       CourseModule?  @relation(fields: [courseModuleId], references: [id], onDelete: Cascade)
+  passMarkPercent    Float          @default(70)
   timeLimitMinutes   Int?
   maxAttempts        Int?
-  randomizeQuestions Boolean  @default(false)
-  randomizeAnswers   Boolean  @default(false)
+  randomizeQuestions Boolean        @default(false)
+  randomizeAnswers   Boolean        @default(false)
   questionPoolSize   Int?
-  status             ContentStatus @default(DRAFT)
+  status             ContentStatus  @default(DRAFT)
   createdById        String?
-  createdBy          User?    @relation("AssessmentCreatedBy", fields: [createdById], references: [id])
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdBy          User?          @relation("AssessmentCreatedBy", fields: [createdById], references: [id])
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
 
   assessmentQuestions AssessmentQuestion[]
   attempts            AssessmentAttempt[]
@@ -578,6 +583,7 @@ model Assessment {
 
   @@index([courseId])
   @@index([lessonId])
+  @@index([courseModuleId])
 }
 
 model AssessmentQuestion {
@@ -599,18 +605,19 @@ enum GradingStatus {
 }
 
 model AssessmentAttempt {
-  id            String   @id @default(uuid())
-  assessmentId  String
-  assessment    Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
-  userId        String
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  attemptNumber Int
-  startedAt     DateTime @default(now())
-  submittedAt   DateTime?
-  expiresAt     DateTime?
-  score         Float?
-  passed        Boolean?
-  gradingStatus GradingStatus @default(PENDING)
+  id               String        @id @default(uuid())
+  assessmentId     String
+  assessment       Assessment    @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  userId           String
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attemptNumber    Int
+  startedAt        DateTime      @default(now())
+  submittedAt      DateTime?
+  expiresAt        DateTime?
+  score            Float?
+  passed           Boolean?
+  gradingStatus    GradingStatus @default(PENDING)
+  questionSnapshot Json?
 
   answers AssessmentAnswer[]
 
@@ -619,39 +626,42 @@ model AssessmentAttempt {
 }
 
 model AssessmentAnswer {
-  id             String   @id @default(uuid())
-  attemptId      String
-  attempt        AssessmentAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
-  questionId     String
-  question       Question @relation(fields: [questionId], references: [id])
-  responseData   Json
-  isCorrect      Boolean?
-  pointsAwarded  Float?
-  gradedById     String?
-  gradedBy       User?    @relation("AnswerGradedBy", fields: [gradedById], references: [id])
-  feedback       String?
+  id            String            @id @default(uuid())
+  attemptId     String
+  attempt       AssessmentAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId    String
+  question      Question          @relation(fields: [questionId], references: [id])
+  responseData  Json
+  isCorrect     Boolean?
+  pointsAwarded Float?
+  gradedById    String?
+  gradedBy      User?             @relation("AnswerGradedBy", fields: [gradedById], references: [id])
+  feedback      String?
 
   @@index([attemptId])
 }
 
 model Assignment {
-  id          String   @id @default(uuid())
-  courseId    String?
-  course      Course?  @relation(fields: [courseId], references: [id])
-  title       String
-  description String?
-  dueDate     DateTime?
-  maxPoints   Float    @default(100)
-  rubric      Json?
-  status      ContentStatus @default(DRAFT)
-  createdById String?
-  createdBy   User?    @relation("AssignmentCreatedBy", fields: [createdById], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String        @id @default(uuid())
+  courseId       String?
+  course         Course?       @relation(fields: [courseId], references: [id])
+  courseModuleId String?
+  courseModule   CourseModule? @relation(fields: [courseModuleId], references: [id], onDelete: Cascade)
+  title          String
+  description    String?
+  dueDate        DateTime?
+  maxPoints      Float         @default(100)
+  rubric         Json?
+  status         ContentStatus @default(DRAFT)
+  createdById    String?
+  createdBy      User?         @relation("AssignmentCreatedBy", fields: [createdById], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   submissions AssignmentSubmission[]
 
   @@index([courseId])
+  @@index([courseModuleId])
 }
 
 enum SubmissionStatus {
@@ -661,16 +671,17 @@ enum SubmissionStatus {
 }
 
 model AssignmentSubmission {
-  id           String   @id @default(uuid())
+  id           String           @id @default(uuid())
   assignmentId String
-  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  assignment   Assignment       @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
   userId       String
-  user         User     @relation("SubmissionUser", fields: [userId], references: [id], onDelete: Cascade)
-  submittedAt  DateTime @default(now())
+  user         User             @relation("SubmissionUser", fields: [userId], references: [id], onDelete: Cascade)
+  content      String?          @db.Text
+  submittedAt  DateTime         @default(now())
   grade        Float?
   feedback     String?
   gradedById   String?
-  gradedBy     User?    @relation("SubmissionGradedBy", fields: [gradedById], references: [id])
+  gradedBy     User?            @relation("SubmissionGradedBy", fields: [gradedById], references: [id])
   status       SubmissionStatus @default(SUBMITTED)
 
   comments AssignmentComment[]
@@ -679,13 +690,13 @@ model AssignmentSubmission {
 }
 
 model AssignmentComment {
-  id           String   @id @default(uuid())
+  id           String               @id @default(uuid())
   submissionId String
   submission   AssignmentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   authorId     String
-  author       User     @relation(fields: [authorId], references: [id])
+  author       User                 @relation(fields: [authorId], references: [id])
   body         String
-  createdAt    DateTime @default(now())
+  createdAt    DateTime             @default(now())
 
   @@index([submissionId])
 }
@@ -695,21 +706,21 @@ model AssignmentComment {
 // =========================================================================
 
 model CompetencyCategory {
-  id          String @id @default(uuid())
-  name        String @unique
+  id          String  @id @default(uuid())
+  name        String  @unique
   description String?
 
   competencies Competency[]
 }
 
 model Competency {
-  id          String   @id @default(uuid())
+  id          String              @id @default(uuid())
   name        String
   description String?
   categoryId  String?
   category    CompetencyCategory? @relation(fields: [categoryId], references: [id])
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
+  isActive    Boolean             @default(true)
+  createdAt   DateTime            @default(now())
 
   mappings         CompetencyMapping[]
   userCompetencies UserCompetency[]
@@ -721,15 +732,15 @@ enum CompetencySourceType {
 }
 
 model CompetencyMapping {
-  id           String   @id @default(uuid())
+  id           String               @id @default(uuid())
   competencyId String
-  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+  competency   Competency           @relation(fields: [competencyId], references: [id], onDelete: Cascade)
   sourceType   CompetencySourceType
   sourceId     String
   courseId     String?
-  course       Course?     @relation(fields: [courseId], references: [id])
+  course       Course?              @relation(fields: [courseId], references: [id])
   assessmentId String?
-  assessment   Assessment? @relation(fields: [assessmentId], references: [id])
+  assessment   Assessment?          @relation(fields: [assessmentId], references: [id])
 
   @@index([sourceType, sourceId])
 }
@@ -741,11 +752,11 @@ enum UserCompetencyStatus {
 }
 
 model UserCompetency {
-  id           String   @id @default(uuid())
+  id           String               @id @default(uuid())
   userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   competencyId String
-  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+  competency   Competency           @relation(fields: [competencyId], references: [id], onDelete: Cascade)
   level        String?
   score        Float?
   status       UserCompetencyStatus @default(IN_PROGRESS)
@@ -756,27 +767,27 @@ model UserCompetency {
 }
 
 model Certification {
-  id                  String   @id @default(uuid())
-  name                String
-  description         String?
-  issuingAcademyId    String?
-  issuingAcademy      Academy? @relation(fields: [issuingAcademyId], references: [id])
-  courseId            String?
-  validityMonths      Int?
+  id                    String               @id @default(uuid())
+  name                  String
+  description           String?
+  issuingAcademyId      String?
+  issuingAcademy        Academy?             @relation(fields: [issuingAcademyId], references: [id])
+  courseId              String?
+  validityMonths        Int?
   certificateTemplateId String?
-  certificateTemplate CertificateTemplate? @relation(fields: [certificateTemplateId], references: [id])
-  createdAt           DateTime @default(now())
+  certificateTemplate   CertificateTemplate? @relation(fields: [certificateTemplateId], references: [id])
+  createdAt             DateTime             @default(now())
 
   issuedCertificates IssuedCertificate[]
 }
 
 model CertificateTemplate {
-  id                   String @id @default(uuid())
-  name                 String
-  design               Json?
-  logoAttachmentId     String?
+  id                    String   @id @default(uuid())
+  name                  String
+  design                Json?
+  logoAttachmentId      String?
   signatureAttachmentId String?
-  createdAt            DateTime @default(now())
+  createdAt             DateTime @default(now())
 
   certifications Certification[]
 }
@@ -788,20 +799,20 @@ enum CertificateStatus {
 }
 
 model IssuedCertificate {
-  id                 String   @id @default(uuid())
-  certificationId    String
-  certification      Certification @relation(fields: [certificationId], references: [id])
-  userId             String
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  certificateNumber  String   @unique
-  issuedAt           DateTime @default(now())
-  expiresAt          DateTime?
-  finalScore         Float?
-  version            Int      @default(1)
-  qrVerificationToken String  @unique
-  status             CertificateStatus @default(ACTIVE)
-  pdfAttachmentId    String?
-  createdAt          DateTime @default(now())
+  id                  String            @id @default(uuid())
+  certificationId     String
+  certification       Certification     @relation(fields: [certificationId], references: [id])
+  userId              String
+  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  certificateNumber   String            @unique
+  issuedAt            DateTime          @default(now())
+  expiresAt           DateTime?
+  finalScore          Float?
+  version             Int               @default(1)
+  qrVerificationToken String            @unique
+  status              CertificateStatus @default(ACTIVE)
+  pdfAttachmentId     String?
+  createdAt           DateTime          @default(now())
 
   @@index([userId])
 }
@@ -811,14 +822,14 @@ model IssuedCertificate {
 // =========================================================================
 
 model LearningPath {
-  id          String   @id @default(uuid())
+  id          String        @id @default(uuid())
   name        String
   description String?
   status      ContentStatus @default(DRAFT)
   createdById String?
-  createdBy   User?    @relation(fields: [createdById], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdBy   User?         @relation(fields: [createdById], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   steps LearningPathStep[]
 }
@@ -830,13 +841,13 @@ enum LearningPathStepType {
 }
 
 model LearningPathStep {
-  id             String   @id @default(uuid())
+  id             String               @id @default(uuid())
   learningPathId String
-  learningPath   LearningPath @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
+  learningPath   LearningPath         @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
   order          Int
   stepType       LearningPathStepType
   stepRefId      String
-  isRequired     Boolean  @default(true)
+  isRequired     Boolean              @default(true)
 
   @@index([learningPathId])
 }
@@ -855,11 +866,11 @@ enum PrerequisiteType {
 }
 
 model Prerequisite {
-  id                String @id @default(uuid())
-  targetType        PrerequisiteTargetType
-  targetId          String
-  prerequisiteType  PrerequisiteType
-  prerequisiteId    String
+  id               String                 @id @default(uuid())
+  targetType       PrerequisiteTargetType
+  targetId         String
+  prerequisiteType PrerequisiteType
+  prerequisiteId   String
 
   @@index([targetType, targetId])
 }
@@ -880,14 +891,14 @@ enum ProgressStatus {
 }
 
 model Enrollment {
-  id             String   @id @default(uuid())
+  id             String         @id @default(uuid())
   userId         String
-  user           User     @relation("EnrollmentUser", fields: [userId], references: [id], onDelete: Cascade)
+  user           User           @relation("EnrollmentUser", fields: [userId], references: [id], onDelete: Cascade)
   enrollableType EnrollableType
   enrollableId   String
-  enrolledAt     DateTime @default(now())
+  enrolledAt     DateTime       @default(now())
   enrolledById   String?
-  enrolledBy     User?    @relation("EnrollmentEnrolledBy", fields: [enrolledById], references: [id])
+  enrolledBy     User?          @relation("EnrollmentEnrolledBy", fields: [enrolledById], references: [id])
   status         ProgressStatus @default(NOT_STARTED)
   completedAt    DateTime?
   dueDate        DateTime?
@@ -897,29 +908,29 @@ model Enrollment {
 }
 
 model LessonProgress {
-  id               String   @id @default(uuid())
+  id               String         @id @default(uuid())
   userId           String
-  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   lessonId         String
-  lesson           Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lesson           Lesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   status           ProgressStatus @default(NOT_STARTED)
-  timeSpentSeconds Int      @default(0)
-  lastAccessedAt   DateTime @default(now())
+  timeSpentSeconds Int            @default(0)
+  lastAccessedAt   DateTime       @default(now())
   completedAt      DateTime?
 
   @@unique([userId, lessonId])
 }
 
 model CourseProgress {
-  id              String   @id @default(uuid())
+  id              String         @id @default(uuid())
   userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   courseId        String
-  percentComplete Float    @default(0)
+  percentComplete Float          @default(0)
   status          ProgressStatus @default(NOT_STARTED)
   startedAt       DateTime?
   completedAt     DateTime?
-  updatedAt       DateTime @updatedAt
+  updatedAt       DateTime       @updatedAt
 
   @@unique([userId, courseId])
 }
@@ -939,27 +950,27 @@ enum NotificationType {
 }
 
 model Notification {
-  id                String   @id @default(uuid())
+  id                String           @id @default(uuid())
   recipientUserId   String
-  recipient         User     @relation(fields: [recipientUserId], references: [id], onDelete: Cascade)
+  recipient         User             @relation(fields: [recipientUserId], references: [id], onDelete: Cascade)
   notificationType  NotificationType @default(GENERIC)
   title             String
   body              String?
   linkUrl           String?
-  isRead            Boolean  @default(false)
+  isRead            Boolean          @default(false)
   deliveredChannels Json?
-  createdAt         DateTime @default(now())
+  createdAt         DateTime         @default(now())
 
   @@index([recipientUserId, isRead])
 }
 
 model NotificationPreference {
-  id               String   @id @default(uuid())
+  id               String           @id @default(uuid())
   userId           String
-  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   notificationType NotificationType
-  inAppEnabled     Boolean  @default(true)
-  emailEnabled     Boolean  @default(true)
+  inAppEnabled     Boolean          @default(true)
+  emailEnabled     Boolean          @default(true)
 
   @@unique([userId, notificationType])
 }
@@ -969,15 +980,15 @@ model NotificationPreference {
 // =========================================================================
 
 model AuditLog {
-  id           String   @id @default(uuid())
-  actorUserId  String?
-  actor        User?    @relation(fields: [actorUserId], references: [id])
-  action       String
-  entityType   String?
-  entityId     String?
-  metadata     Json?
-  ipAddress    String?
-  createdAt    DateTime @default(now())
+  id          String   @id @default(uuid())
+  actorUserId String?
+  actor       User?    @relation(fields: [actorUserId], references: [id])
+  action      String
+  entityType  String?
+  entityId    String?
+  metadata    Json?
+  ipAddress   String?
+  createdAt   DateTime @default(now())
 
   @@index([entityType, entityId])
   @@index([actorUserId, createdAt])

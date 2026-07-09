@@ -1,8 +1,18 @@
-import { IsInt, IsOptional, IsString, Max, Min } from "class-validator";
+import { IsBoolean, IsEnum, IsInt, IsOptional, IsString, Max, Min } from "class-validator";
+import { AssessmentKind } from "@prisma/client";
 
 export class CreateAssessmentDto {
+  @IsOptional()
   @IsString()
-  lessonId!: string;
+  lessonId?: string;
+
+  @IsOptional()
+  @IsString()
+  courseModuleId?: string;
+
+  @IsOptional()
+  @IsEnum(AssessmentKind)
+  assessmentKind?: AssessmentKind;
 
   @IsString()
   title!: string;
@@ -20,4 +30,22 @@ export class CreateAssessmentDto {
   @IsInt()
   @Min(1)
   maxAttempts?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  timeLimitMinutes?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  randomizeQuestions?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  randomizeAnswers?: boolean;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  questionPoolSize?: number;
 }

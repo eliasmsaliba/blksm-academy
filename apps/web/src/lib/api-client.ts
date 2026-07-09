@@ -167,12 +167,36 @@ export const assessmentsApi = {
   // Learner-safe
   getByLesson: (lessonId: string) => get<any>(`/assessments/lesson/${lessonId}`),
   startAttempt: (lessonId: string) => post<any>(`/assessments/lesson/${lessonId}/attempts`),
+  getByModule: (moduleId: string) => get<any>(`/assessments/module/${moduleId}`),
+  startModuleAttempt: (moduleId: string) => post<any>(`/assessments/module/${moduleId}/attempts`),
   submitAttempt: (attemptId: string, data: unknown) => post<any>(`/assessments/attempts/${attemptId}/submit`, data),
   // Admin
   getByLessonAdmin: (lessonId: string) => get<any>(`/assessments/lesson/${lessonId}/manage`),
+  getByModuleAdmin: (moduleId: string) => get<any>(`/assessments/module/${moduleId}/manage`),
   create: (data: unknown) => post<any>("/assessments", data),
   update: (id: string, data: unknown) => patch<any>(`/assessments/${id}`, data),
   addQuestion: (assessmentId: string, data: unknown) => post<any>(`/assessments/${assessmentId}/questions`, data),
   removeQuestion: (assessmentId: string, questionId: string) =>
     del<{ success: boolean }>(`/assessments/${assessmentId}/questions/${questionId}`),
+  // Grading (Assessor / Trainer / Department Manager)
+  listGrading: () => get<any[]>("/assessments/grading"),
+  getGradingDetail: (attemptId: string) => get<any>(`/assessments/grading/${attemptId}`),
+  gradeAnswer: (attemptId: string, answerId: string, data: unknown) =>
+    post<any>(`/assessments/grading/${attemptId}/answers/${answerId}`, data),
+  finalizeAttempt: (attemptId: string) => post<any>(`/assessments/grading/${attemptId}/finalize`),
+};
+
+export const assignmentsApi = {
+  // Learner-safe
+  getByModule: (moduleId: string) => get<any>(`/assignments/module/${moduleId}`),
+  submit: (assignmentId: string, data: unknown) => post<any>(`/assignments/${assignmentId}/submissions`, data),
+  // Admin
+  getByModuleAdmin: (moduleId: string) => get<any>(`/assignments/module/${moduleId}/manage`),
+  create: (data: unknown) => post<any>("/assignments", data),
+  update: (id: string, data: unknown) => patch<any>(`/assignments/${id}`, data),
+  // Grading (Assessor / Trainer / Department Manager)
+  listGrading: () => get<any[]>("/assignments/grading"),
+  getGradingDetail: (submissionId: string) => get<any>(`/assignments/grading/${submissionId}`),
+  gradeSubmission: (submissionId: string, data: unknown) => post<any>(`/assignments/grading/${submissionId}/grade`, data),
+  addComment: (submissionId: string, data: unknown) => post<any>(`/assignments/submissions/${submissionId}/comments`, data),
 };

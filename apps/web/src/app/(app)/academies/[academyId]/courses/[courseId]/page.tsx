@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { PlayCircle } from "lucide-react";
 import { coursesApi, courseModulesApi, progressApi } from "@/lib/api-client";
+import { ModuleExam } from "@/components/modules/module-exam";
+import { ModuleAssignment } from "@/components/modules/module-assignment";
 
 export default function CourseDetailPage() {
   const { academyId, courseId } = useParams<{ academyId: string; courseId: string }>();
@@ -83,6 +85,10 @@ export default function CourseDetailPage() {
                 <li className="px-3 py-2 text-sm text-slate-400">No lessons yet.</li>
               )}
             </ul>
+            <div className="mt-4 space-y-4">
+              <ModuleExam moduleId={mod.id} />
+              <ModuleAssignment moduleId={mod.id} />
+            </div>
           </section>
         ))}
       </div>

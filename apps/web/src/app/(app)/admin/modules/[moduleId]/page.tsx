@@ -182,7 +182,23 @@ export default function AdminModuleLessonsPage() {
         <Link href={`/admin/courses/${mod.courseId}`} className="text-sm text-indigo-600 hover:underline">
           &larr; Back to course
         </Link>
-        <h1 className="mt-2 text-2xl font-semibold text-slate-900">{mod.title}</h1>
+        <div className="mt-2 flex items-center justify-between">
+          <h1 className="text-2xl font-semibold text-slate-900">{mod.title}</h1>
+          <div className="flex items-center gap-4">
+            <Link
+              href={`/admin/modules/${moduleId}/assessment`}
+              className="text-sm font-medium text-indigo-600 hover:underline"
+            >
+              Module Assessment
+            </Link>
+            <Link
+              href={`/admin/modules/${moduleId}/assignment`}
+              className="text-sm font-medium text-indigo-600 hover:underline"
+            >
+              Practical Assignment
+            </Link>
+          </div>
+        </div>
         <p className="mt-1 text-sm text-slate-500">Manage this module&rsquo;s overview and lessons.</p>
       </div>
 

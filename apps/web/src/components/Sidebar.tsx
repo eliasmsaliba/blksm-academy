@@ -10,6 +10,7 @@ import {
   Users,
   ShieldCheck,
   Building2,
+  ClipboardCheck,
   LogOut,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
@@ -29,6 +30,7 @@ const learnerNav: NavItem[] = [
 
 const adminNav: NavItem[] = [
   { href: "/admin/academies", label: "Academies", icon: GraduationCap, permission: "academy.create" },
+  { href: "/admin/grading", label: "Grading Queue", icon: ClipboardCheck, permission: "assessment.grade" },
   { href: "/admin/users", label: "Users", icon: Users, permission: "user.read" },
   { href: "/admin/roles", label: "Roles & Permissions", icon: ShieldCheck, permission: "role.read" },
   { href: "/admin/departments", label: "Departments", icon: Building2, permission: "department.read" },

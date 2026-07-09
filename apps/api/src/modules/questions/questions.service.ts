@@ -1,13 +1,19 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { QuestionType } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
-import { CreateQuestionDto, GRADABLE_QUESTION_TYPES } from "./dto/create-question.dto";
+import {
+  CreateQuestionDto,
+  GRADABLE_QUESTION_TYPES,
+  MANUALLY_GRADED_QUESTION_TYPES,
+} from "./dto/create-question.dto";
 import { UpdateQuestionDto } from "./dto/update-question.dto";
 
-function assertGradable(questionType: QuestionType) {
-  if (!GRADABLE_QUESTION_TYPES.includes(questionType as (typeof GRADABLE_QUESTION_TYPES)[number])) {
+const SUPPORTED_QUESTION_TYPES = [...GRADABLE_QUESTION_TYPES, ...MANUALLY_GRADED_QUESTION_TYPES];
+
+function assertSupported(questionType: QuestionType) {
+  if (!SUPPORTED_QUESTION_TYPES.includes(questionType as (typeof SUPPORTED_QUESTION_TYPES)[number])) {
     throw new BadRequestException(
-      `Question type ${questionType} is not supported yet — only MCQ_SINGLE, MCQ_MULTI and TRUE_FALSE are auto-gradable.`,
+      `Question type ${questionType} is not supported yet — only MCQ_SINGLE, MCQ_MULTI, TRUE_FALSE, SHORT_ANSWER and ESSAY are.`,
     );
   }
 }
@@ -37,20 +43,23 @@ export class QuestionsService {
   }
 
   create(dto: CreateQuestionDto, userId: string) {
-    assertGradable(dto.questionType);
+    assertSupported(dto.questionType);
     return this.prisma.question.create({
       data: {
         questionType: dto.questionType,
         promptText: { text: dto.promptText },
         points: dto.points ?? 1,
+        gradingGuidance: dto.gradingGuidance,
         createdById: userId,
-        options: {
-          create: dto.options.map((o, i) => ({
-            optionText: o.optionText,
-            isCorrect: o.isCorrect,
-            order: o.order ?? i,
-          })),
-        },
+        options: dto.options
+          ? {
+              create: dto.options.map((o, i) => ({
+                optionText: o.optionText,
+                isCorrect: o.isCorrect,
+                order: o.order ?? i,
+              })),
+            }
+          : undefined,
       },
       include: { options: { orderBy: { order: "asc" } } },
     });
@@ -58,7 +67,7 @@ export class QuestionsService {
 
   async update(id: string, dto: UpdateQuestionDto) {
     await this.findOne(id);
-    if (dto.questionType) assertGradable(dto.questionType);
+    if (dto.questionType) assertSupported(dto.questionType);
 
     if (dto.options) {
       await this.prisma.questionOption.deleteMany({ where: { questionId: id } });
@@ -70,6 +79,7 @@ export class QuestionsService {
         questionType: dto.questionType,
         promptText: dto.promptText !== undefined ? { text: dto.promptText } : undefined,
         points: dto.points,
+        gradingGuidance: dto.gradingGuidance,
         isActive: dto.isActive,
         options: dto.options
           ? {

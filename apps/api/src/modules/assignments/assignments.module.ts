@@ -1,5 +1,10 @@
 import { Module } from "@nestjs/common";
+import { AssignmentsService } from "./assignments.service";
+import { AssignmentsController } from "./assignments.controller";
 
-/** Phase 2: Prisma models (Assignment, AssignmentSubmission, AssignmentComment) exist; submission/grading UI not yet built. */
-@Module({})
+@Module({
+  controllers: [AssignmentsController],
+  providers: [AssignmentsService],
+  exports: [AssignmentsService],
+})
 export class AssignmentsModule {}

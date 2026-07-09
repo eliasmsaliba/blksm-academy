@@ -1,13 +1,18 @@
 import { Type } from "class-transformer";
-import { ArrayMinSize, IsArray, IsString, ValidateNested } from "class-validator";
+import { ArrayMinSize, IsArray, IsOptional, IsString, ValidateNested } from "class-validator";
 
 export class SubmittedAnswerDto {
   @IsString()
   questionId!: string;
 
+  @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  selectedOptionIds!: string[];
+  selectedOptionIds?: string[];
+
+  @IsOptional()
+  @IsString()
+  responseText?: string;
 }
 
 export class SubmitAttemptDto {

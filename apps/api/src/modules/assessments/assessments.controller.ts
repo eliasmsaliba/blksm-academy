@@ -7,23 +7,38 @@ import { CreateAssessmentDto } from "./dto/create-assessment.dto";
 import { UpdateAssessmentDto } from "./dto/update-assessment.dto";
 import { AddAssessmentQuestionDto } from "./dto/add-assessment-question.dto";
 import { SubmitAttemptDto } from "./dto/submit-attempt.dto";
+import { GradeAnswerDto } from "./dto/grade-answer.dto";
 
 @Controller("assessments")
 export class AssessmentsController {
   constructor(private assessmentsService: AssessmentsService) {}
 
-  // --- Learner-safe routes: never expose isCorrect / correct answers pre-submission ---
+  // --- Learner-safe routes: never expose isCorrect / correct answers / gradingGuidance pre-submission ---
 
   @Get("lesson/:lessonId")
   @RequirePermissions("lesson.read", "assessment.read")
-  getLearnerSummary(@Param("lessonId") lessonId: string, @CurrentUser() user: RequestUser) {
-    return this.assessmentsService.getLearnerSummary(lessonId, user.id);
+  getLearnerSummaryForLesson(@Param("lessonId") lessonId: string, @CurrentUser() user: RequestUser) {
+    return this.assessmentsService.getLearnerSummary({ lessonId }, user.id);
   }
 
   @Post("lesson/:lessonId/attempts")
   @RequirePermissions("assessment.attempt")
-  startAttempt(@Param("lessonId") lessonId: string, @CurrentUser() user: RequestUser) {
-    return this.assessmentsService.startOrResumeAttempt(lessonId, user.id);
+  async startAttemptForLesson(@Param("lessonId") lessonId: string, @CurrentUser() user: RequestUser) {
+    const assessmentId = await this.assessmentsService.findAssessmentIdByScope({ lessonId });
+    return this.assessmentsService.startOrResumeAttempt(assessmentId, user.id);
+  }
+
+  @Get("module/:moduleId")
+  @RequirePermissions("courseModule.read", "assessment.read")
+  getLearnerSummaryForModule(@Param("moduleId") moduleId: string, @CurrentUser() user: RequestUser) {
+    return this.assessmentsService.getLearnerSummary({ courseModuleId: moduleId }, user.id);
+  }
+
+  @Post("module/:moduleId/attempts")
+  @RequirePermissions("assessment.attempt")
+  async startAttemptForModule(@Param("moduleId") moduleId: string, @CurrentUser() user: RequestUser) {
+    const assessmentId = await this.assessmentsService.findAssessmentIdByScope({ courseModuleId: moduleId });
+    return this.assessmentsService.startOrResumeAttempt(assessmentId, user.id);
   }
 
   @Post("attempts/:attemptId/submit")
@@ -41,13 +56,19 @@ export class AssessmentsController {
   @Get("lesson/:lessonId/manage")
   @RequirePermissions("assessment.update")
   getForLessonAdmin(@Param("lessonId") lessonId: string) {
-    return this.assessmentsService.findByLessonAdmin(lessonId);
+    return this.assessmentsService.findManageView({ lessonId });
+  }
+
+  @Get("module/:moduleId/manage")
+  @RequirePermissions("assessment.update")
+  getForModuleAdmin(@Param("moduleId") moduleId: string) {
+    return this.assessmentsService.findManageView({ courseModuleId: moduleId });
   }
 
   @Post()
   @RequirePermissions("assessment.create")
   create(@Body() dto: CreateAssessmentDto, @CurrentUser() user: RequestUser) {
-    return this.assessmentsService.createForLesson(dto, user.id);
+    return this.assessmentsService.create(dto, user.id);
   }
 
   @Patch(":id")
@@ -67,5 +88,36 @@ export class AssessmentsController {
   async removeQuestion(@Param("id") id: string, @Param("questionId") questionId: string) {
     await this.assessmentsService.removeQuestion(id, questionId);
     return { success: true };
+  }
+
+  // --- Grading routes (Assessor / Trainer / Department Manager via assessment.grade) ---
+
+  @Get("grading")
+  @RequirePermissions("assessment.grade")
+  listPendingGrading() {
+    return this.assessmentsService.listPendingGrading();
+  }
+
+  @Get("grading/:attemptId")
+  @RequirePermissions("assessment.grade")
+  getAttemptForGrading(@Param("attemptId") attemptId: string) {
+    return this.assessmentsService.getAttemptForGrading(attemptId);
+  }
+
+  @Post("grading/:attemptId/answers/:answerId")
+  @RequirePermissions("assessment.grade")
+  gradeAnswer(
+    @Param("attemptId") attemptId: string,
+    @Param("answerId") answerId: string,
+    @Body() dto: GradeAnswerDto,
+    @CurrentUser() user: RequestUser,
+  ) {
+    return this.assessmentsService.gradeAnswer(attemptId, answerId, dto, user.id);
+  }
+
+  @Post("grading/:attemptId/finalize")
+  @RequirePermissions("assessment.grade")
+  finalizeAttempt(@Param("attemptId") attemptId: string) {
+    return this.assessmentsService.finalizeAttempt(attemptId);
   }
 }
