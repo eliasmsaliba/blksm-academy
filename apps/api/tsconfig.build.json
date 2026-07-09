@@ -1,4 +1,11 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "dist", "prisma/seed.ts", "prisma/wipe-demo.ts"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "prisma/seed.ts",
+    "prisma/wipe-demo.ts",
+    "prisma/migrate-foundation-lesson-content.ts",
+    "prisma/add-assessment-permissions.ts"
+  ]
 }
