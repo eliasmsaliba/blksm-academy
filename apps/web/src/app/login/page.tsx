@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useAuth } from "@/lib/auth-context";
 import { ApiError } from "@/lib/api-client";
 
@@ -28,10 +29,14 @@ export default function LoginPage() {
     <div className="flex flex-1 items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 text-lg font-bold text-white">
-            B
-          </div>
-          <h1 className="text-xl font-semibold text-slate-900">BLKSM Academy</h1>
+          <Image
+            src="/blksm-academy-logo.png"
+            alt="BLKSM Academy"
+            width={180}
+            height={105}
+            className="mx-auto mb-4"
+            priority
+          />
           <p className="mt-1 text-sm text-slate-500">Sign in to continue your learning</p>
         </div>
 

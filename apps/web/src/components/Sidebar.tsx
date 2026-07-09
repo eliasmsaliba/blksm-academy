@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -58,14 +59,11 @@ export function Sidebar() {
 
   return (
     <aside className="flex h-full w-64 flex-col bg-slate-900 text-white">
-      <div className="flex items-center gap-2 px-5 py-5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold">
-          B
+      <div className="px-5 py-5">
+        <div className="inline-flex items-center rounded-lg bg-white px-3 py-2">
+          <Image src="/blksm-academy-logo.png" alt="BLKSM Academy" width={130} height={76} priority />
         </div>
-        <div>
-          <p className="text-sm font-semibold leading-tight">BLKSM Academy</p>
-          <p className="text-xs text-slate-400 leading-tight">Learning Platform</p>
-        </div>
+        <p className="mt-2 text-xs text-slate-400">Learning Platform</p>
       </div>
 
       <nav className="flex-1 space-y-1 px-3">
