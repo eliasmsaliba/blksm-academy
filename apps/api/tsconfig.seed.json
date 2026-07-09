@@ -11,6 +11,7 @@
     "prisma/wipe-demo.ts",
     "prisma/migrate-foundation-lesson-content.ts",
     "prisma/add-assessment-permissions.ts",
-    "prisma/add-assignment-permissions.ts"
+    "prisma/add-assignment-permissions.ts",
+    "prisma/import-foundation-course1.ts"
   ]
 }

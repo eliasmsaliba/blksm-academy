@@ -16,7 +16,8 @@
     "db:wipe-demo:prod": "node dist-seed/wipe-demo.js",
     "db:migrate-lesson-content:prod": "node dist-seed/migrate-foundation-lesson-content.js",
     "db:add-assessment-permissions:prod": "node dist-seed/add-assessment-permissions.js",
-    "db:add-assignment-permissions:prod": "node dist-seed/add-assignment-permissions.js"
+    "db:add-assignment-permissions:prod": "node dist-seed/add-assignment-permissions.js",
+    "db:import-foundation-course1:prod": "node dist-seed/import-foundation-course1.js"
   },
   "dependencies": {
     "@blksm/shared": "*",
