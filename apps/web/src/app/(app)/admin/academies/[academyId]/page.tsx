@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { BookOpen, Plus, ArrowRight, Trash2 } from "lucide-react";
 import { academiesApi, coursesApi, ApiError } from "@/lib/api-client";
 
 export default function AdminAcademyCoursesPage() {
@@ -49,12 +50,20 @@ export default function AdminAcademyCoursesPage() {
         <Link href="/admin/academies" className="text-sm text-indigo-600 hover:underline">
           &larr; All academies
         </Link>
-        <h1 className="mt-2 text-2xl font-semibold text-slate-900">{academy.name}</h1>
+        <div className="mt-2 flex items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+            <BookOpen size={20} />
+          </div>
+          <h1 className="text-2xl font-semibold text-slate-900">{academy.name}</h1>
+        </div>
         <p className="mt-1 text-sm text-slate-500">Manage courses within this academy.</p>
       </div>
 
       <form onSubmit={handleCreate} className="rounded-2xl border border-slate-200 bg-white p-6">
-        <h2 className="mb-4 text-sm font-semibold text-slate-700">Add a course</h2>
+        <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-700">
+          <Plus size={16} className="text-slate-400" />
+          Add a course
+        </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <label className="block text-sm">
             <span className="font-medium text-slate-700">Title</span>
@@ -88,8 +97,9 @@ export default function AdminAcademyCoursesPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
+          className="mt-4 flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
         >
+          <Plus size={16} />
           {submitting ? "Creating…" : "Create course"}
         </button>
       </form>
@@ -100,28 +110,35 @@ export default function AdminAcademyCoursesPage() {
             key={course.id}
             className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-5"
           >
-            <div>
-              <p className="font-medium text-slate-900">
-                {course.title}
-                {course.isDemoData && (
-                  <span className="ml-2 rounded-full bg-amber-50 px-2 py-0.5 text-xs text-amber-700">
-                    DEMO
-                  </span>
-                )}
-              </p>
-              <p className="text-sm text-slate-500">{course.description}</p>
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                <BookOpen size={18} />
+              </div>
+              <div>
+                <p className="font-medium text-slate-900">
+                  {course.title}
+                  {course.isDemoData && (
+                    <span className="ml-2 rounded-full bg-amber-50 px-2 py-0.5 text-xs text-amber-700">
+                      DEMO
+                    </span>
+                  )}
+                </p>
+                <p className="text-sm text-slate-500">{course.description}</p>
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <Link
                 href={`/admin/courses/${course.id}`}
-                className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                className="flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
               >
                 Manage modules
+                <ArrowRight size={14} />
               </Link>
               <button
                 onClick={() => handleDelete(course.id)}
-                className="text-xs font-medium text-red-600 hover:underline"
+                className="flex items-center gap-1 text-xs font-medium text-red-600 hover:underline"
               >
+                <Trash2 size={14} />
                 Delete
               </button>
             </div>

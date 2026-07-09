@@ -3,6 +3,24 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import {
+  Layers,
+  ClipboardCheck,
+  NotebookPen,
+  HelpCircle,
+  Trash2,
+  Plus,
+  UploadCloud,
+  Paperclip,
+  FileText,
+  Video,
+  Music,
+  Presentation,
+  Image as ImageIcon,
+  Code2,
+  Link2,
+  MonitorPlay,
+} from "lucide-react";
 import { courseModulesApi, lessonsApi, attachmentsApi, ApiError } from "@/lib/api-client";
 
 const LESSON_TYPES = [
@@ -16,6 +34,18 @@ const LESSON_TYPES = [
   "LINK",
   "INTERACTIVE",
 ];
+
+const LESSON_TYPE_ICONS: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+  RICH_TEXT: FileText,
+  VIDEO: Video,
+  AUDIO: Music,
+  PDF: FileText,
+  PPTX: Presentation,
+  IMAGE: ImageIcon,
+  EMBED: Code2,
+  LINK: Link2,
+  INTERACTIVE: MonitorPlay,
+};
 
 interface Section {
   heading: string;
@@ -183,18 +213,25 @@ export default function AdminModuleLessonsPage() {
           &larr; Back to course
         </Link>
         <div className="mt-2 flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-slate-900">{mod.title}</h1>
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+              <Layers size={20} />
+            </div>
+            <h1 className="text-2xl font-semibold text-slate-900">{mod.title}</h1>
+          </div>
           <div className="flex items-center gap-4">
             <Link
               href={`/admin/modules/${moduleId}/assessment`}
-              className="text-sm font-medium text-indigo-600 hover:underline"
+              className="flex items-center gap-1.5 text-sm font-medium text-indigo-600 hover:underline"
             >
+              <ClipboardCheck size={16} />
               Module Assessment
             </Link>
             <Link
               href={`/admin/modules/${moduleId}/assignment`}
-              className="text-sm font-medium text-indigo-600 hover:underline"
+              className="flex items-center gap-1.5 text-sm font-medium text-indigo-600 hover:underline"
             >
+              <NotebookPen size={16} />
               Practical Assignment
             </Link>
           </div>
@@ -203,7 +240,10 @@ export default function AdminModuleLessonsPage() {
       </div>
 
       <form onSubmit={handleSaveModule} className="rounded-2xl border border-slate-200 bg-white p-6">
-        <h2 className="mb-4 text-sm font-semibold text-slate-700">Module Overview</h2>
+        <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-700">
+          <Layers size={16} className="text-slate-400" />
+          Module Overview
+        </h2>
         <div className="space-y-4">
           <label className="block text-sm">
             <span className="font-medium text-slate-700">Module Description</span>
@@ -413,50 +453,62 @@ export default function AdminModuleLessonsPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
+          className="mt-4 flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
         >
+          <Plus size={16} />
           {submitting ? "Creating…" : "Create lesson"}
         </button>
       </form>
 
       <div className="space-y-3">
-        {mod.lessons?.map((lesson: any) => (
+        {mod.lessons?.map((lesson: any) => {
+          const TypeIcon = LESSON_TYPE_ICONS[lesson.lessonType] ?? FileText;
+          return (
           <div key={lesson.id} className="rounded-2xl border border-slate-200 bg-white p-5">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium text-slate-900">
-                  {lesson.title}
-                  {lesson.isDemoData && (
-                    <span className="ml-2 rounded-full bg-amber-50 px-2 py-0.5 text-xs text-amber-700">
-                      DEMO
-                    </span>
-                  )}
-                </p>
-                <p className="text-xs text-slate-400">{lesson.lessonType}</p>
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
+                  <TypeIcon size={18} />
+                </div>
+                <div>
+                  <p className="font-medium text-slate-900">
+                    {lesson.title}
+                    {lesson.isDemoData && (
+                      <span className="ml-2 rounded-full bg-amber-50 px-2 py-0.5 text-xs text-amber-700">
+                        DEMO
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-xs text-slate-400">{lesson.lessonType}</p>
+                </div>
               </div>
               <div className="flex items-center gap-3">
                 {lesson.lessonType === "RICH_TEXT" && (
                   <Link
                     href={`/admin/lessons/${lesson.id}/knowledge-check`}
-                    className="text-xs font-medium text-indigo-600 hover:underline"
+                    className="flex items-center gap-1 text-xs font-medium text-indigo-600 hover:underline"
                   >
+                    <HelpCircle size={14} />
                     Knowledge Check
                   </Link>
                 )}
                 <button
                   onClick={() => handleDelete(lesson.id)}
-                  className="text-xs font-medium text-red-600 hover:underline"
+                  className="flex items-center gap-1 text-xs font-medium text-red-600 hover:underline"
                 >
+                  <Trash2 size={14} />
                   Delete
                 </button>
               </div>
             </div>
 
             <div className="mt-3 flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2">
-              <div className="text-xs text-slate-500">
+              <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                <Paperclip size={13} />
                 {(attachments[lesson.id] ?? []).length} attachment(s)
               </div>
-              <label className="cursor-pointer text-xs font-medium text-indigo-600 hover:underline">
+              <label className="flex cursor-pointer items-center gap-1 text-xs font-medium text-indigo-600 hover:underline">
+                <UploadCloud size={14} />
                 {uploadingFor === lesson.id ? "Uploading…" : "Upload attachment"}
                 <input
                   type="file"
@@ -471,7 +523,8 @@ export default function AdminModuleLessonsPage() {
               </label>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

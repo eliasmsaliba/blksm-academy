@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { GraduationCap, Plus, ArrowRight, Trash2 } from "lucide-react";
 import { academiesApi, ApiError } from "@/lib/api-client";
 
 export default function AdminAcademiesPage() {
@@ -42,12 +43,20 @@ export default function AdminAcademiesPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Academy Management</h1>
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+            <GraduationCap size={20} />
+          </div>
+          <h1 className="text-2xl font-semibold text-slate-900">Academy Management</h1>
+        </div>
         <p className="mt-1 text-sm text-slate-500">Create and structure certification academies.</p>
       </div>
 
       <form onSubmit={handleCreate} className="rounded-2xl border border-slate-200 bg-white p-6">
-        <h2 className="mb-4 text-sm font-semibold text-slate-700">Add an academy</h2>
+        <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-700">
+          <Plus size={16} className="text-slate-400" />
+          Add an academy
+        </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <label className="block text-sm">
             <span className="font-medium text-slate-700">Name</span>
@@ -82,8 +91,9 @@ export default function AdminAcademiesPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
+          className="mt-4 flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
         >
+          <Plus size={16} />
           {submitting ? "Creating…" : "Create academy"}
         </button>
       </form>
@@ -94,28 +104,35 @@ export default function AdminAcademiesPage() {
             key={academy.id}
             className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-5"
           >
-            <div>
-              <p className="font-medium text-slate-900">
-                {academy.name}
-                {academy.isDemoData && (
-                  <span className="ml-2 rounded-full bg-amber-50 px-2 py-0.5 text-xs text-amber-700">
-                    DEMO
-                  </span>
-                )}
-              </p>
-              <p className="text-sm text-slate-500">{academy._count?.courses ?? 0} courses</p>
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                <GraduationCap size={18} />
+              </div>
+              <div>
+                <p className="font-medium text-slate-900">
+                  {academy.name}
+                  {academy.isDemoData && (
+                    <span className="ml-2 rounded-full bg-amber-50 px-2 py-0.5 text-xs text-amber-700">
+                      DEMO
+                    </span>
+                  )}
+                </p>
+                <p className="text-sm text-slate-500">{academy._count?.courses ?? 0} courses</p>
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <Link
                 href={`/admin/academies/${academy.id}`}
-                className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                className="flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
               >
                 Manage courses
+                <ArrowRight size={14} />
               </Link>
               <button
                 onClick={() => handleDelete(academy.id)}
-                className="text-xs font-medium text-red-600 hover:underline"
+                className="flex items-center gap-1 text-xs font-medium text-red-600 hover:underline"
               >
+                <Trash2 size={14} />
                 Delete
               </button>
             </div>
