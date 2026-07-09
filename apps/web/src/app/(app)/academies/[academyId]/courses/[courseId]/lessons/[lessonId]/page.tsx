@@ -4,8 +4,19 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { lessonsApi, progressApi } from "@/lib/api-client";
+import { StructuredLessonContent } from "@/components/lessons/structured-lesson-content";
 
-function LessonContent({ lessonType, content }: { lessonType: string; content: any }) {
+function LessonContent({
+  lessonType,
+  content,
+  lessonId,
+  estimatedDurationMinutes,
+}: {
+  lessonType: string;
+  content: any;
+  lessonId: string;
+  estimatedDurationMinutes?: number;
+}) {
   const url: string | undefined = content?.url;
 
   switch (lessonType) {
@@ -60,6 +71,15 @@ function LessonContent({ lessonType, content }: { lessonType: string; content: a
       );
     case "RICH_TEXT":
     default:
+      if (content?.format === "structured-v1") {
+        return (
+          <StructuredLessonContent
+            content={content}
+            lessonId={lessonId}
+            estimatedDurationMinutes={estimatedDurationMinutes}
+          />
+        );
+      }
       return (
         <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
           {content?.body ?? "No content yet."}
@@ -127,7 +147,12 @@ export default function LessonViewerPage() {
       <div className="rounded-2xl border border-slate-200 bg-white p-6">
         <h1 className="text-xl font-semibold text-slate-900">{lesson.title}</h1>
         <div className="mt-4">
-          <LessonContent lessonType={lesson.lessonType} content={lesson.content} />
+          <LessonContent
+            lessonType={lesson.lessonType}
+            content={lesson.content}
+            lessonId={lessonId}
+            estimatedDurationMinutes={lesson.estimatedDurationMinutes}
+          />
         </div>
       </div>
 

@@ -1,5 +1,10 @@
 import { Module } from "@nestjs/common";
+import { AssessmentsService } from "./assessments.service";
+import { AssessmentsController } from "./assessments.controller";
 
-/** Phase 2: Prisma models (Assessment, AssessmentQuestion, AssessmentAttempt, AssessmentAnswer) exist; taking/grading logic not yet built. */
-@Module({})
+@Module({
+  controllers: [AssessmentsController],
+  providers: [AssessmentsService],
+  exports: [AssessmentsService],
+})
 export class AssessmentsModule {}

@@ -6,5 +6,10 @@
     "baseUrl": ".",
     "paths": {}
   },
-  "include": ["prisma/seed.ts", "prisma/wipe-demo.ts"]
+  "include": [
+    "prisma/seed.ts",
+    "prisma/wipe-demo.ts",
+    "prisma/migrate-foundation-lesson-content.ts",
+    "prisma/add-assessment-permissions.ts"
+  ]
 }

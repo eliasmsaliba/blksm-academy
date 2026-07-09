@@ -1,4 +1,4 @@
-import { IsBoolean, IsEnum, IsInt, IsOptional, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsEnum, IsInt, IsOptional, IsString } from "class-validator";
 import { ContentStatus } from "@prisma/client";
 
 export class CreateCourseModuleDto {
@@ -15,6 +15,15 @@ export class CreateCourseModuleDto {
   @IsOptional()
   @IsString()
   learningOutcomes?: string;
+
+  @IsOptional()
+  @IsString()
+  deliveryMethod?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  resourcesRequired?: string[];
 
   @IsOptional()
   @IsInt()

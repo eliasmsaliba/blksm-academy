@@ -8,7 +8,13 @@ import { coursesApi, courseModulesApi, ApiError } from "@/lib/api-client";
 export default function AdminCourseModulesPage() {
   const { courseId } = useParams<{ courseId: string }>();
   const [course, setCourse] = useState<any | null>(null);
-  const [form, setForm] = useState({ title: "", description: "" });
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    learningOutcomes: "",
+    deliveryMethod: "",
+    resourcesRequired: "",
+  });
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -27,11 +33,15 @@ export default function AdminCourseModulesPage() {
     try {
       await courseModulesApi.create({
         ...form,
+        resourcesRequired: form.resourcesRequired
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
         courseId,
         status: "PUBLISHED",
         order: course?.modules?.length ?? 0,
       });
-      setForm({ title: "", description: "" });
+      setForm({ title: "", description: "", learningOutcomes: "", deliveryMethod: "", resourcesRequired: "" });
       await refresh();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to create module");
@@ -71,7 +81,7 @@ export default function AdminCourseModulesPage() {
             />
           </label>
           <label className="block text-sm">
-            <span className="font-medium text-slate-700">Description</span>
+            <span className="font-medium text-slate-700">Module Description</span>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -79,6 +89,36 @@ export default function AdminCourseModulesPage() {
               rows={2}
             />
           </label>
+          <label className="block text-sm">
+            <span className="font-medium text-slate-700">Module Learning Outcomes</span>
+            <textarea
+              value={form.learningOutcomes}
+              onChange={(e) => setForm({ ...form, learningOutcomes: e.target.value })}
+              className="input mt-1"
+              rows={2}
+              placeholder="One outcome per line"
+            />
+          </label>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <label className="block text-sm">
+              <span className="font-medium text-slate-700">Delivery Method</span>
+              <input
+                value={form.deliveryMethod}
+                onChange={(e) => setForm({ ...form, deliveryMethod: e.target.value })}
+                className="input mt-1"
+                placeholder="e.g. Self-Paced Online Learning"
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="font-medium text-slate-700">Resources Required</span>
+              <input
+                value={form.resourcesRequired}
+                onChange={(e) => setForm({ ...form, resourcesRequired: e.target.value })}
+                className="input mt-1"
+                placeholder="Comma-separated, e.g. Employee Handbook, Code of Conduct"
+              />
+            </label>
+          </div>
         </div>
         {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
         <button

@@ -97,6 +97,8 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<string, string[] | "*"> = {
     "learningPath.create", "learningPath.read", "learningPath.update",
     "enrollment.create", "enrollment.read", "enrollment.delete",
     "progress.read",
+    "question.create", "question.read", "question.update",
+    "assessment.create", "assessment.read", "assessment.update",
     "admin.access",
   ],
   "HR Administrator": [
@@ -122,6 +124,7 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<string, string[] | "*"> = {
     "course.read", "courseModule.read",
     "lesson.read", "lesson.update",
     "question.create", "question.read", "question.update",
+    "assessment.create", "assessment.read", "assessment.update",
     "assignment.grade", "assessment.grade",
     "sop.read", "kb.read",
     "admin.access",

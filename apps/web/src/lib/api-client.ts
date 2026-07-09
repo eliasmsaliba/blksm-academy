@@ -155,3 +155,24 @@ export const progressApi = {
   setLessonProgress: (lessonId: string, data: unknown) =>
     put<any>(`/progress/lessons/${lessonId}`, data),
 };
+
+export const questionsApi = {
+  list: (questionType?: string) => get<any[]>(`/questions${questionType ? `?questionType=${questionType}` : ""}`),
+  get: (id: string) => get<any>(`/questions/${id}`),
+  create: (data: unknown) => post<any>("/questions", data),
+  update: (id: string, data: unknown) => patch<any>(`/questions/${id}`, data),
+};
+
+export const assessmentsApi = {
+  // Learner-safe
+  getByLesson: (lessonId: string) => get<any>(`/assessments/lesson/${lessonId}`),
+  startAttempt: (lessonId: string) => post<any>(`/assessments/lesson/${lessonId}/attempts`),
+  submitAttempt: (attemptId: string, data: unknown) => post<any>(`/assessments/attempts/${attemptId}/submit`, data),
+  // Admin
+  getByLessonAdmin: (lessonId: string) => get<any>(`/assessments/lesson/${lessonId}/manage`),
+  create: (data: unknown) => post<any>("/assessments", data),
+  update: (id: string, data: unknown) => patch<any>(`/assessments/${id}`, data),
+  addQuestion: (assessmentId: string, data: unknown) => post<any>(`/assessments/${assessmentId}/questions`, data),
+  removeQuestion: (assessmentId: string, questionId: string) =>
+    del<{ success: boolean }>(`/assessments/${assessmentId}/questions/${questionId}`),
+};

@@ -276,6 +276,8 @@ model CourseModule {
   title       String
   description String?
   learningOutcomes String?
+  deliveryMethod String?
+  resourcesRequired String[] @default([])
   estimatedDurationMinutes Int?
   status      ContentStatus @default(DRAFT)
   order       Int      @default(0)
@@ -304,6 +306,7 @@ model Lesson {
   updatedAt    DateTime @updatedAt
 
   lessonProgress LessonProgress[]
+  assessments    Assessment[]
 
   @@index([courseModuleId])
 }
@@ -555,6 +558,8 @@ model Assessment {
   assessmentKind     AssessmentKind @default(ASSESSMENT)
   courseId           String?
   course             Course?  @relation(fields: [courseId], references: [id])
+  lessonId           String?
+  lesson             Lesson?  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   passMarkPercent    Float    @default(70)
   timeLimitMinutes   Int?
   maxAttempts        Int?
@@ -572,6 +577,7 @@ model Assessment {
   competencyMappings  CompetencyMapping[]
 
   @@index([courseId])
+  @@index([lessonId])
 }
 
 model AssessmentQuestion {

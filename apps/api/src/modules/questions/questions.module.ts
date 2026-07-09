@@ -1,5 +1,10 @@
 import { Module } from "@nestjs/common";
+import { QuestionsService } from "./questions.service";
+import { QuestionsController } from "./questions.controller";
 
-/** Phase 2: Prisma models (Question, QuestionOption) exist; API/UI not yet built. */
-@Module({})
+@Module({
+  controllers: [QuestionsController],
+  providers: [QuestionsService],
+  exports: [QuestionsService],
+})
 export class QuestionsModule {}
